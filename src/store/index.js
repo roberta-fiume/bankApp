@@ -17,6 +17,8 @@ export default new Vuex.Store({
 
   getters: {
     responseFromApi: (state) => state.response,
+    getEmail: (state) => state.email,
+    getPassword: (state) => state.password
   },
 
   mutations: {
@@ -47,6 +49,10 @@ export default new Vuex.Store({
       console.log(router)
       router.push('/');
 
+    },
+
+    updatePassword({ commit }, password) {
+      commit('updatePassword', password);
     }
   },
 

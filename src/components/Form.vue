@@ -1,7 +1,7 @@
 <template>
     <div class="form">
         <input type="text" :value="email" @input="updateEmail" placeholder="Enter your email">
-        <p>{{email}}</p>
+        <p>{{getEmail}}</p>
         <input type="text" v-model="password" placeholder="Enter your password">
         <p>{{password}}</p>
         <button @click="getData">Login</button>
@@ -20,22 +20,22 @@ export default {
 
     computed: {
         email() {
-            return this.$store.state.email
+            return this.getEmail
         },
 
         password: {
             get() {
-                return this.$store.state.password
+                return this.getPassword
             },
 
             set(value) {
-                return this.$store.commit('updatePassword', value)
+                return this.updatePassword(value);
             },
 
            
         },
 
-        ...mapGetters(['responseFromApi']),
+        ...mapGetters(['responseFromApi', 'getEmail', 'getPassword']),
     },
 
     created() {
@@ -59,7 +59,7 @@ export default {
         //     })
         // }
 
-         ...mapActions(['getData']),
+         ...mapActions(['getData', 'updatePassword']),
 
         updateEmail(e) {
             this.$store.commit('updateEmail', e.target.value)
