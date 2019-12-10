@@ -30,7 +30,12 @@ export default new Vuex.Store({
       state.password = password
     },
 
-    responseApi: (state, message) => state.response = message
+    responseApi: (state, message) => state.response = message,
+
+    clearFields(state) {
+      state.email = "";
+      state.password = ""
+    }
   },
 
   actions: {
@@ -44,15 +49,27 @@ export default new Vuex.Store({
       let users = "users"
       const response = await axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${users}/${email}/${password}`);
       console.log("this is the response", response);
-      alert(response.data.message);
+      
+      if(response.data.logedIn) {
+        
+        router.push('/');
+      } else {
+        alert(response.data.message);
+        // router.push('/login');
+      }
       commit('responseApi', response.data.message)
-      console.log(router)
-      router.push('/');
-
     },
 
     updatePassword({ commit }, password) {
       commit('updatePassword', password);
+    },
+
+    updateEmail({ commit }, email) {
+      commit('updateEmail', email);
+    },
+
+    clearFields({ commit }) {
+      commit('clearFields');
     }
   },
 
