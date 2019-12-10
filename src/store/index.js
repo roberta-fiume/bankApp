@@ -12,14 +12,25 @@ export default new Vuex.Store({
   state: {
     email: "",
     password: "",
-    response: ""
+    response: "",
+
+    emailRegistration: "",
+    passwordRegistration: "",
+    responseRegistraton: "",
+    // responseRegistration: []
   },
 
   getters: {
-    responseFromApi: (state) => state.response,
     getEmail: (state) => state.email,
-    getPassword: (state) => state.password
+    getPassword: (state) => state.password,
+    responseFromApi: (state) => state.response,
+  
+
+    getEmailRegistration: (state) => state.emailRegistration,
+    getPasswordRegistration: (state) => state.passwordRegistration,
+    // responsePostRequest: (state) => state.responseRegistraton 
   },
+
 
   mutations: {
     updateEmail(state, email) {
@@ -35,7 +46,19 @@ export default new Vuex.Store({
     clearFields(state) {
       state.email = "";
       state.password = ""
-    }
+    },
+
+
+
+    updateEmailRegistration(state, email) {
+      state.emailRegistration = email
+    },
+
+    updatePasswordRegistration(state, password) {
+      state.passwordRegistration = password
+    },
+
+   
   },
 
   actions: {
@@ -70,7 +93,39 @@ export default new Vuex.Store({
 
     clearFields({ commit }) {
       commit('clearFields');
+    },
+
+
+    updateEmailRegistration({ commit }, email) {
+      commit('updateEmailRegistration', email);
+    },
+
+    updatePasswordRegistration({ commit }, password) {
+      commit('updatePasswordRegistration', password);
+    },
+
+    postData() {
+      console.log("this is the email", this.getters.getEmailRegistration);
+      console.log("this is the password", this.getters.getPasswordRegistration);
+      console.log("I workkk")
+      const axios = require('axios');
+      let users = "users"
+      const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/${users}`, {
+        email: this.getters.getEmailRegistration,
+        password:  this.getters.getPasswordRegistration,
+      });
+      postPromise.then((response) => {
+        console.log("this is the  POST RESPONSE", response);
+        // commit('postResponse', response.data);
+
+      },(error) => {
+        console.log("this is the error",error);
+      });
+      
+      return postPromise;
     }
+
+  
   },
 
   modules: {

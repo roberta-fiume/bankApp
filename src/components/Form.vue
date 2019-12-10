@@ -1,5 +1,6 @@
 <template>
     <div class="form">
+        <h1>Login</h1>
         <input type="text" v-model="email" placeholder="Enter your email">
         <p>{{email}}</p>
         <input type="text" v-model="password" placeholder="Enter your password">
@@ -56,7 +57,6 @@ export default {
     methods: {
          ...mapActions(['getData', 'updatePassword', 'updateEmail', 'clearFields']),
         
-
         // updateEmail(e) {
         //     this.$store.commit('updateEmail', e.target.value)
         // }
