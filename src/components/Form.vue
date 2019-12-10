@@ -6,8 +6,8 @@
         <input type="text" v-model="password" placeholder="Enter your password">
         <p>{{password}}</p>
         <button @click="getData">Login</button>
-        <p>{{responseFromApi}}</p>
-        <button @click="clearFields">CLEAR</button>
+        <!-- <p>{{responseFromApi}}</p> -->
+        <button @click="clearFieldsLogin">CLEAR</button>
     </div>
 </template>
 
@@ -28,9 +28,7 @@ export default {
 
             set(value) {
                 return this.updateEmail(value);
-            },
-
-           
+            }, 
         },
 
         password: {
@@ -40,12 +38,9 @@ export default {
 
             set(value) {
                 return this.updatePassword(value);
-            },
-
-           
+            }, 
         },
-
-        ...mapGetters(['responseFromApi', 'getEmail', 'getPassword']),
+        ...mapGetters(['getEmail', 'getPassword']),
     },
 
     created() {
@@ -55,11 +50,7 @@ export default {
 
     
     methods: {
-         ...mapActions(['getData', 'updatePassword', 'updateEmail', 'clearFields']),
-        
-        // updateEmail(e) {
-        //     this.$store.commit('updateEmail', e.target.value)
-        // }
+         ...mapActions(['getData', 'updatePassword', 'updateEmail', 'clearFieldsLogin']),
     }
 }
 </script>

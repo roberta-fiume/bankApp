@@ -2,85 +2,47 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '@/router'
 
-
-
 Vue.use(Vuex)
-
-
 
 export default new Vuex.Store({
   state: {
     email: "",
     password: "",
-    response: "",
+    // response: "",
 
     emailRegistration: "",
     passwordRegistration: "",
     responseRegistraton: "",
-    // responseRegistration: []
   },
 
   getters: {
     getEmail: (state) => state.email,
     getPassword: (state) => state.password,
-    responseFromApi: (state) => state.response,
+    // responseFromApi: (state) => state.response,
   
-
     getEmailRegistration: (state) => state.emailRegistration,
     getPasswordRegistration: (state) => state.passwordRegistration,
-    // responsePostRequest: (state) => state.responseRegistraton 
-  },
-
-
-  mutations: {
-    updateEmail(state, email) {
-      state.email = email
-    },
-
-    updatePassword(state, password) {
-      state.password = password
-    },
-
-    responseApi: (state, message) => state.response = message,
-
-    clearFields(state) {
-      state.email = "";
-      state.password = ""
-    },
-
-
-
-    updateEmailRegistration(state, email) {
-      state.emailRegistration = email
-    },
-
-    updatePasswordRegistration(state, password) {
-      state.passwordRegistration = password
-    },
-
-   
+    responsePostRequest: (state) => state.responseRegistraton 
   },
 
   actions: {
-    
-    async getData({ commit }) {
-      console.log(commit);
-     
+    async getData() {
       const axios = require('axios');
       let email = this.state.email;
-      let password = this.state.password;
+      console.log("THIS IS THE EMAIL", email);
+      let password = this.getters.getPassword;
+      console.log("THIS IS THE PASSWORD", password)
       let users = "users"
-      const response = await axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${users}/${email}/${password}`);
-      console.log("this is the response", response);
-      
-      if(response.data.logedIn) {
-        
+      const response = await axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${users}/${email}/${password}`);  
+      console.log(response);
+      if(response.data.loggedIn) {
+        // commit('responseApi', response.data.message);
+        alert(response.data.message);
         router.push('/');
       } else {
         alert(response.data.message);
-        // router.push('/login');
       }
-      commit('responseApi', response.data.message)
+  
     },
 
     updatePassword({ commit }, password) {
@@ -91,8 +53,8 @@ export default new Vuex.Store({
       commit('updateEmail', email);
     },
 
-    clearFields({ commit }) {
-      commit('clearFields');
+    clearFieldsLogin({ commit }) {
+      commit('clearFieldsLogin');
     },
 
 
@@ -104,28 +66,51 @@ export default new Vuex.Store({
       commit('updatePasswordRegistration', password);
     },
 
-    postData() {
-      console.log("this is the email", this.getters.getEmailRegistration);
-      console.log("this is the password", this.getters.getPasswordRegistration);
-      console.log("I workkk")
+    postData({commit}) {
       const axios = require('axios');
       let users = "users"
       const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/${users}`, {
         email: this.getters.getEmailRegistration,
-        password:  this.getters.getPasswordRegistration,
+        password: this.getters.getPasswordRegistration,
       });
       postPromise.then((response) => {
-        console.log("this is the  POST RESPONSE", response);
-        // commit('postResponse', response.data);
-
+        if(response.status == "200") {
+           commit('postResponse');
+        }
       },(error) => {
         console.log("this is the error",error);
       });
-      
       return postPromise;
     }
+  },
 
+  mutations: {
+    updateEmail(state, email) {
+      state.email = email
+    },
+
+    updatePassword(state, password) {
+      state.password = password
+    },
+
+    // responseApi: (state, message) => state.response = message,
   
+
+    clearFieldsLogin(state) {
+      state.email = "";
+      state.password = ""
+    },
+
+    updateEmailRegistration(state, email) {
+      state.emailRegistration = email
+    },
+
+    updatePasswordRegistration(state, password) {
+      state.passwordRegistration = password
+    },
+
+    postResponse: (state) => state.responseRegistraton = "Registration completed",
+
   },
 
   modules: {
