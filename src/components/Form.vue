@@ -6,7 +6,7 @@
         <input type="text" v-model="password" placeholder="Enter your password">
         <p>{{password}}</p>
         <button @click="getData">Login</button>
-        <!-- <p>{{responseFromApi}}</p> -->
+        <p>{{responseFromApi }}</p>
         <button @click="clearFieldsLogin">CLEAR</button>
     </div>
 </template>
@@ -16,7 +16,7 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     data() {
         return {
-        
+            
         }
     },
 
@@ -40,7 +40,7 @@ export default {
                 return this.updatePassword(value);
             }, 
         },
-        ...mapGetters(['getEmail', 'getPassword']),
+        ...mapGetters(['getEmail', 'getPassword','responseFromApi']),
     },
 
     created() {
@@ -50,7 +50,7 @@ export default {
 
     
     methods: {
-         ...mapActions(['getData', 'updatePassword', 'updateEmail', 'clearFieldsLogin']),
+         ...mapActions(['getData', 'updatePassword', 'updateEmail','clearFieldsLogin']),
     }
 }
 </script>

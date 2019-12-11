@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
     email: "",
     password: "",
-    // response: "",
+    response: "",
+    paragraphWithResponse: false,
 
     emailRegistration: "",
     passwordRegistration: "",
@@ -18,7 +19,7 @@ export default new Vuex.Store({
   getters: {
     getEmail: (state) => state.email,
     getPassword: (state) => state.password,
-    // responseFromApi: (state) => state.response,
+    responseFromApi: (state) => state.response,
   
     getEmailRegistration: (state) => state.emailRegistration,
     getPasswordRegistration: (state) => state.passwordRegistration,
@@ -26,23 +27,27 @@ export default new Vuex.Store({
   },
 
   actions: {
-    async getData() {
+    getData({commit}) {
       const axios = require('axios');
-      let email = this.state.email;
-      console.log("THIS IS THE EMAIL", email);
-      let password = this.getters.getPassword;
-      console.log("THIS IS THE PASSWORD", password)
-      let users = "users"
-      const response = await axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${users}/${email}/${password}`);  
-      console.log(response);
-      if(response.data.loggedIn) {
-        // commit('responseApi', response.data.message);
-        alert(response.data.message);
-        router.push('/');
-      } else {
-        alert(response.data.message);
-      }
-  
+        let email = this.state.email;
+        console.log("THIS IS THE EMAIL", email);
+        let password = this.getters.getPassword;
+        console.log("THIS IS THE PASSWORD", password)
+        let users = "users";
+        axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${users}/${email}/${password}`).then(response => {
+         console.log(response);
+         if (response.data.loggedIn) {
+          commit('responseApi', response.data.message);
+            setTimeout(() => {
+              router.push('/');
+              commit('responseApi')
+            }, 2000);
+         } else {
+          commit('responseApi',response.data.message);
+         }
+        }).catch(error => {
+          console.log(error.response.data.message)
+      })
     },
 
     updatePassword({ commit }, password) {
@@ -56,7 +61,6 @@ export default new Vuex.Store({
     clearFieldsLogin({ commit }) {
       commit('clearFieldsLogin');
     },
-
 
     updateEmailRegistration({ commit }, email) {
       commit('updateEmailRegistration', email);
@@ -76,6 +80,10 @@ export default new Vuex.Store({
       postPromise.then((response) => {
         if(response.status == "200") {
            commit('postResponse');
+           setTimeout(() => {
+            commit('postResponse');
+            router.push('/login');
+          }, 2000);
         }
       },(error) => {
         console.log("this is the error",error);
@@ -93,12 +101,11 @@ export default new Vuex.Store({
       state.password = password
     },
 
-    // responseApi: (state, message) => state.response = message,
-  
+    responseApi: (state, message) => state.response = message,
 
     clearFieldsLogin(state) {
       state.email = "";
-      state.password = ""
+      state.password = "";
     },
 
     updateEmailRegistration(state, email) {

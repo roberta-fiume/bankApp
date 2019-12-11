@@ -51,7 +51,7 @@ export default {
     },
 
   methods: {
-         ...mapActions(['updatePasswordRegistration', 'updateEmailRegistration', 'postData']),
+      ...mapActions(['updatePasswordRegistration', 'updateEmailRegistration', 'postData']),
   }
 }
 </script>
