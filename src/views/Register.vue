@@ -7,11 +7,11 @@
     <p>{{passwordRegistration}}</p>
    <button @click="postData()">Sign up</button>
    <p>{{responsePostRequest}}</p>
-   <p></p>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
   data() {
@@ -43,12 +43,6 @@ export default {
 
       ...mapGetters(['getEmailRegistration', 'getPasswordRegistration', 'responsePostRequest']),
   },
-
-  
-    created() {
-            console.log(mapState);
-            console.log(mapActions)
-    },
 
   methods: {
       ...mapActions(['updatePasswordRegistration', 'updateEmailRegistration', 'postData']),

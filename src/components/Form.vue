@@ -7,11 +7,12 @@
         <p>{{password}}</p>
         <button @click="getData">Login</button>
         <p>{{responseFromApi }}</p>
-        <button @click="clearFieldsLogin">CLEAR</button>
+        <!-- <button  v-if="getParagraph" @click="clearFieldsLogin">CLEAR</button> -->
     </div>
 </template>
 
 <script>
+/* eslint-disable */
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     data() {
@@ -40,17 +41,11 @@ export default {
                 return this.updatePassword(value);
             }, 
         },
-        ...mapGetters(['getEmail', 'getPassword','responseFromApi']),
+        ...mapGetters(['getEmail', 'getPassword','responseFromApi', 'getParagraph']),
     },
 
-    created() {
-            console.log(mapState);
-             console.log(mapActions)
-    },
-
-    
     methods: {
-         ...mapActions(['getData', 'updatePassword', 'updateEmail','clearFieldsLogin']),
+         ...mapActions(['getData', 'updatePassword', 'updateEmail']),
     }
 }
 </script>
