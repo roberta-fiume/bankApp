@@ -75,6 +75,7 @@ export default new Vuex.Store({
       commit('updatePasswordRegistration', password);
     },
 
+    /* eslint-disable */
     postData({commit}) {
       const axios = require('axios');
       let users = "users"
@@ -83,15 +84,14 @@ export default new Vuex.Store({
         password: this.getters.getPasswordRegistration,
       });
       postPromise.then((response) => {
-        if(response.status == "200") {
-           commit('postResponse');
+        console.log(response)
+          commit('postResponse', response.data.message);
           setTimeout(() => {
-            // commit('postResponse');
             router.push('/login');
             commit('clearFieldsRegister');
-            commit('clearPostResponse');
+            commit('postResponse');
           }, 2000);
-        }
+        
       },(error) => {
         console.log("this is the error",error);
       });
@@ -108,19 +108,12 @@ export default new Vuex.Store({
       state.password = password
     },
 
-    // clearEmail: (state) => state.email = "",
-    // clearPassword: (state) => state.password = "",
-
-
     responseApi: (state, message) => state.response = message,
-
-    // editParagraphState: (state) => state.paragraphWithResponse = true,
 
     clearFieldsLogin(state) {
       state.email = "";
       state.password = "";
     },
-
 
     updateEmailRegistration(state, email) {
       state.emailRegistration = email
@@ -134,7 +127,7 @@ export default new Vuex.Store({
       state.emailRegistration = "";
       state.passwordRegistration = "";
     },
-    postResponse: (state) => state.responseRegistraton = "Registration completed",
+    postResponse: (state, message) => state.responseRegistraton = message,
 
     clearPostResponse: (state) => state.responseRegistraton = ""
   },
