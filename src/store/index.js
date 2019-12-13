@@ -16,6 +16,10 @@ export default new Vuex.Store({
     responseRegistraton: "",
 
     accountNumber: [],
+    date: "",
+    amount: "",
+    recipient: "",
+    transferResponse: ""
    
   },
 
@@ -30,7 +34,10 @@ export default new Vuex.Store({
     responsePostRequest: (state) => state.responseRegistraton,
 
     getAccount: (state) => state.accountNumber,
-    // getBalance: (state) => state.balance
+    getDate: (state) => state.date,
+    getAmount: (state) => state.amount,
+    getRecipient: (state) => state.recipient,
+    getTransferResponse: (state) => state.transferResponse
   },
 
   actions: {
@@ -81,6 +88,18 @@ export default new Vuex.Store({
       commit('updatePasswordRegistration', password);
     },
 
+    updateDate({ commit }, date) {
+      commit('updateDate', date);
+    },
+
+    updateAmount({ commit }, amount) {
+      commit('updateAmount', amount);
+    },
+
+    updateRecipient({ commit }, recipient) {
+      commit('updateRecipient', recipient);
+    },
+
     /* eslint-disable */
     postData({commit}) {
       const axios = require('axios');
@@ -115,6 +134,34 @@ export default new Vuex.Store({
       }).catch(err => {
         console.log(err)
       })
+    },
+
+    /* eslint-disable */
+    sendTransferDetails({commit}) {
+      const axios = require('axios');
+      let account = "account";
+      let accountNumber = this.getters.getAccount[0].accountNumber;
+      console.log("this is the account number",accountNumber)
+      let date = this.getters.getDate;
+      console.log("this is the date", date)
+      let amount = this.getters.getAmount;
+      console.log("this is the amount", amount)
+      let recipient = this.getters.getRecipient;
+      console.log("this is the recipient", recipient)
+
+      const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/${account}/${accountNumber}/${date}/${amount}/${recipient}`, {
+      accountNumber: accountNumber,
+      date: date,
+      amount: amount,
+      recipient: recipient
+      });
+      postPromise.then((response) => {
+        console.log(response)
+          commit('responseTransfer', response.data.message);
+      },(error) => {
+        console.log("this is the error",error);
+      });
+      return postPromise;
     }
   },
 
@@ -150,7 +197,21 @@ export default new Vuex.Store({
 
     clearPostResponse: (state) => state.responseRegistraton = "",
 
-    accountInfoFromApi: (state, accountNumber) => state.accountNumber = accountNumber
+    accountInfoFromApi: (state, accountNumber) => state.accountNumber = accountNumber,
+
+    updateDate(state, date) {
+      state.date = date
+    },
+
+    updateAmount(state, amount) {
+      state.amount = amount
+    },
+
+    updateRecipient(state, recipient) {
+      state.recipient = recipient
+    },
+
+    responseTransfer: (state, message) => state.transferResponse = message 
   },
 
   modules: {

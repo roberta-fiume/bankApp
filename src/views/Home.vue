@@ -9,14 +9,38 @@
         </div>
        
        <div class="transaction-wrapper">
-            <p>10/12/2019</p>
+            <p>10th Dec 2019</p>
             <p>Julio Lopez</p>
             <p>-50</p>
         </div>
         <div class="buttons">
-            <button>Make a transfer</button>
+            <button @click="showDetailsForTransfer">Make a transfer</button>
             <button>Deposit</button>
         </div>
+        <div v-if="transferDetails">
+            <div v-for="account in getAccount" :key="account.total" class="transferDetails" >
+            <p>From: {{account.accountNumber}}</p>
+
+            <div class="date">
+                <label>Enter date:</label><input type="text" placeholder="ex: 23rd Nov 2018" v-model="date">
+                <p>{{date}}</p>
+            </div>
+           
+           <div class="amount">
+               <label>Enter amount: </label><input type="text" v-model="amount">
+                  <p>{{amount}}</p>
+            </div>
+
+           <div class="recipient">
+               <label>Enter recipient:</label><input type="text" v-model="recipient">
+                  <p>{{recipient}}</p>
+            </div>
+          
+           <button class="sendTransference" @click="sendTransferDetails">SEND</button>
+           <p>{{getTransferResponse}}</p>
+        </div>
+        </div>
+     
     
     </div>
 </template>
@@ -30,12 +54,45 @@ export default {
     }, 
     data() {
         return {
-
+            transferDetails: false
         }
     },
 
     computed: {
-        ...mapGetters(['getAccount'])
+        date: {
+            get() {
+                return this.getDate
+            },
+
+            set(value) {
+                return this.updateDate(value);
+            },
+        },
+
+
+        amount: {
+            get() {
+                return this.getAmount
+            },
+
+            set(value) {
+                return this.updateAmount(value);
+            },
+        },
+
+        recipient: {
+            get() {
+                return this.getRecipient
+            },
+
+            set(value) {
+                return this.updateRecipient(value);
+            },
+        },
+
+
+        
+        ...mapGetters(['getAccount', 'getDate', 'getAmount', 'getRecipient', 'getTransferResponse'])
       
     },
 
@@ -44,7 +101,11 @@ export default {
     },
 
     methods: {
-        ...mapActions(['getAccountInfo'])
+        ...mapActions(['getAccountInfo', 'updateDate', 'updateAmount', 'updateRecipient', 'sendTransferDetails']),
+
+        showDetailsForTransfer() {
+            this.transferDetails = true
+        }
     }
 }
 </script>
@@ -64,6 +125,35 @@ export default {
 .import {
     display: flex;
     align-items: flex-end
+}
+
+.transferDetails {
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+}
+.date {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+.amount {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+.recipient {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+.sendTransference {
+    width: 70px;
+
 }
 
 </style>
