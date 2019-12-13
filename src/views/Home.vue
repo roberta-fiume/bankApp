@@ -1,23 +1,29 @@
 <template>
     <div>
-        <div class="balance"> 
-            <h2>BALANCE:</h2>
-            <h2>1200</h2>
+        <div v-for="account in getAccount" :key="account.accountNumber">
+             <h2>Welcome, {{account.accountNumber}}</h2>
+            <div class="balance"> 
+                <h2>BALANCE:</h2>
+                <h2>{{account.total}}</h2>
+            </div>
         </div>
        
        <div class="transaction-wrapper">
-            <div class="transactions">
-                <p>Date reference</p>
-                <p>name of who get the money</p>
-            </div>
-            <div class="import">
-                <p>-import that you send</p>
-            </div>
+            <p>10/12/2019</p>
+            <p>Julio Lopez</p>
+            <p>-50</p>
         </div>
+        <div class="buttons">
+            <button>Make a transfer</button>
+            <button>Deposit</button>
+        </div>
+    
     </div>
 </template>
 
 <script>
+/* eslint-disable */
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     components: {
 
@@ -26,6 +32,19 @@ export default {
         return {
 
         }
+    },
+
+    computed: {
+        ...mapGetters(['getAccount'])
+      
+    },
+
+    created() {
+        this.getAccountInfo();
+    },
+
+    methods: {
+        ...mapActions(['getAccountInfo'])
     }
 }
 </script>

@@ -14,6 +14,9 @@ export default new Vuex.Store({
     emailRegistration: "",
     passwordRegistration: "",
     responseRegistraton: "",
+
+    accountNumber: [],
+   
   },
 
   getters: {
@@ -24,7 +27,10 @@ export default new Vuex.Store({
   
     getEmailRegistration: (state) => state.emailRegistration,
     getPasswordRegistration: (state) => state.passwordRegistration,
-    responsePostRequest: (state) => state.responseRegistraton 
+    responsePostRequest: (state) => state.responseRegistraton,
+
+    getAccount: (state) => state.accountNumber,
+    // getBalance: (state) => state.balance
   },
 
   actions: {
@@ -96,6 +102,19 @@ export default new Vuex.Store({
         console.log("this is the error",error);
       });
       return postPromise;
+    },
+
+    
+    /* eslint-disable */
+    getAccountInfo({commit}) {
+      const axios = require('axios');
+      let account = "account";
+      axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${account}`).then(response => {
+  
+        commit('accountInfoFromApi', response.data)
+      }).catch(err => {
+        console.log(err)
+      })
     }
   },
 
@@ -129,7 +148,9 @@ export default new Vuex.Store({
     },
     postResponse: (state, message) => state.responseRegistraton = message,
 
-    clearPostResponse: (state) => state.responseRegistraton = ""
+    clearPostResponse: (state) => state.responseRegistraton = "",
+
+    accountInfoFromApi: (state, accountNumber) => state.accountNumber = accountNumber
   },
 
   modules: {
