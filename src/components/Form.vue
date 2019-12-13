@@ -6,7 +6,7 @@
         <input type="text" v-model="password" placeholder="Enter your password">
         <p>{{password}}</p>
         <button @click="getData">Login</button>
-        <p>{{responseFromApi }}</p>
+        <p>{{ responseFromApi }}</p>
         <!-- <button  v-if="getParagraph" @click="clearFieldsLogin">CLEAR</button> -->
     </div>
 </template>
