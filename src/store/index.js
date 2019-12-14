@@ -19,7 +19,8 @@ export default new Vuex.Store({
     date: "",
     amount: "",
     recipient: "",
-    transferResponse: ""
+    transferResponse: "",
+    transferBox: false
    
   },
 
@@ -37,7 +38,8 @@ export default new Vuex.Store({
     getDate: (state) => state.date,
     getAmount: (state) => state.amount,
     getRecipient: (state) => state.recipient,
-    getTransferResponse: (state) => state.transferResponse
+    getTransferResponse: (state) => state.transferResponse,
+    getTransferBox: (state) => state.transferBox
   },
 
   actions: {
@@ -101,28 +103,36 @@ export default new Vuex.Store({
     },
 
     /* eslint-disable */
-    postData({commit}) {
+    createUser({commit}) {
       const axios = require('axios');
-      let users = "users"
-      const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/${users}`, {
-        email: this.getters.getEmailRegistration,
-        password: this.getters.getPasswordRegistration,
-      });
-      postPromise.then((response) => {
-        console.log(response)
-          commit('postResponse', response.data.message);
-          setTimeout(() => {
-            router.push('/login');
-            commit('clearFieldsRegister');
-            commit('postResponse');
-          }, 2000);
-        
-      },(error) => {
-        console.log("this is the error",error);
-      });
-      return postPromise;
-    },
+      let users = "users";
+      let account = "accounts";
+      let accountNumber;
 
+      const createBankAccount = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/${account}`);
+      createBankAccount.then((response => {
+        accountNumber = response.data.number;
+        console.log("ACCOUNT NUMBER",accountNumber);
+        const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/${users}`, {
+          email: this.getters.getEmailRegistration,
+          password: this.getters.getPasswordRegistration,
+          accountNumber: accountNumber
+        });
+        postPromise.then((response) => {
+          console.log(response)
+            commit('postResponse', response.data.message);
+            setTimeout(() => {
+              router.push('/login');
+              commit('clearFieldsRegister');
+              commit('postResponse');
+            }, 2000);
+          
+        },(error) => {
+          console.log("this is the error",error);
+        });
+        return postPromise;
+      }))
+    },
     
     /* eslint-disable */
     getAccountInfo({commit}) {
@@ -137,18 +147,18 @@ export default new Vuex.Store({
     },
 
     /* eslint-disable */
+    showTransferBox({commit}) {
+      commit('showTransferBox');
+    },
+
+    /* eslint-disable */
     sendTransferDetails({commit}) {
       const axios = require('axios');
       let account = "account";
       let accountNumber = this.getters.getAccount[0].accountNumber;
-      console.log("this is the account number",accountNumber)
       let date = this.getters.getDate;
-      console.log("this is the date", date)
       let amount = this.getters.getAmount;
-      console.log("this is the amount", amount)
       let recipient = this.getters.getRecipient;
-      console.log("this is the recipient", recipient)
-
       const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/${account}/${accountNumber}/${date}/${amount}/${recipient}`, {
       accountNumber: accountNumber,
       date: date,
@@ -158,6 +168,9 @@ export default new Vuex.Store({
       postPromise.then((response) => {
         console.log(response)
           commit('responseTransfer', response.data.message);
+          setTimeout(() => {
+            commit('changeStatusTransferBox');
+          }, 2000);
       },(error) => {
         console.log("this is the error",error);
       });
@@ -211,7 +224,11 @@ export default new Vuex.Store({
       state.recipient = recipient
     },
 
-    responseTransfer: (state, message) => state.transferResponse = message 
+    showTransferBox: (state) => state.transferBox = true,
+
+    responseTransfer: (state, message) => state.transferResponse = message,
+
+    changeStatusTransferBox: (state) => state.transferBox = false
   },
 
   modules: {

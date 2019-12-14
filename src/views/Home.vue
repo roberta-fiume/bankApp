@@ -14,10 +14,10 @@
             <p>-50</p>
         </div>
         <div class="buttons">
-            <button @click="showDetailsForTransfer">Make a transfer</button>
+            <button @click="showTransferBox">Make a transfer</button>
             <button>Deposit</button>
         </div>
-        <div v-if="transferDetails">
+        <div v-if="getTransferBox">
             <div v-for="account in getAccount" :key="account.total" class="transferDetails" >
             <p>From: {{account.accountNumber}}</p>
 
@@ -54,7 +54,7 @@ export default {
     }, 
     data() {
         return {
-            transferDetails: false
+            // transferDetails: false
         }
     },
 
@@ -92,7 +92,7 @@ export default {
 
 
         
-        ...mapGetters(['getAccount', 'getDate', 'getAmount', 'getRecipient', 'getTransferResponse'])
+        ...mapGetters(['getAccount', 'getDate', 'getAmount', 'getRecipient', 'getTransferBox','getTransferResponse'])
       
     },
 
@@ -101,11 +101,11 @@ export default {
     },
 
     methods: {
-        ...mapActions(['getAccountInfo', 'updateDate', 'updateAmount', 'updateRecipient', 'sendTransferDetails']),
+        ...mapActions(['getAccountInfo', 'updateDate', 'updateAmount', 'updateRecipient', 'showTransferBox', 'sendTransferDetails']),
 
-        showDetailsForTransfer() {
-            this.transferDetails = true
-        }
+        // showDetailsForTransfer() {
+        //     this.transferDetails = true
+        // }
     }
 }
 </script>

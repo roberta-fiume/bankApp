@@ -5,7 +5,7 @@
    <p>{{emailRegistration}}</p>
    <input type="text" v-model="passwordRegistration" placeholder="Enter a password">
     <p>{{passwordRegistration}}</p>
-   <button @click="postData()">Sign up</button>
+   <button @click="createUser()">Sign up</button>
    <p>{{responsePostRequest}}</p>
   </div>
 </template>
@@ -45,7 +45,7 @@ export default {
   },
 
   methods: {
-      ...mapActions(['updatePasswordRegistration', 'updateEmailRegistration', 'postData']),
+      ...mapActions(['updatePasswordRegistration', 'updateEmailRegistration', 'createUser']),
   }
 }
 </script>
