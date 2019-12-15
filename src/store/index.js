@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import router from '@/router'
 
 Vue.use(Vuex)
+const axios = require('axios');
 
 export default new Vuex.Store({
   state: {
@@ -10,12 +11,16 @@ export default new Vuex.Store({
     password: "",
     response: "",
     paragraphWithResponse: false,
+    accountNumber:"",
+    recipientAccountNumber: '',
 
     emailRegistration: "",
     passwordRegistration: "",
     responseRegistraton: "",
 
-    accountNumber: [],
+    userEmail: "",
+
+    // accountNumber: [],
     date: "",
     amount: "",
     recipient: "",
@@ -29,15 +34,19 @@ export default new Vuex.Store({
     getPassword: (state) => state.password,
     responseFromApi: (state) => state.response,
     getParagraph: (state) => state.paragraphWithResponse,
+    getAccountNumber: (state) => state.accountNumber,
+    getUserEmail: (state) => state.userEmail,
+    
   
     getEmailRegistration: (state) => state.emailRegistration,
     getPasswordRegistration: (state) => state.passwordRegistration,
     responsePostRequest: (state) => state.responseRegistraton,
 
-    getAccount: (state) => state.accountNumber,
+    // getAccount: (state) => state.accountNumber,
     getDate: (state) => state.date,
     getAmount: (state) => state.amount,
     getRecipient: (state) => state.recipient,
+    getRecipientAccountNumber: (state) => state.recipientAccountNumber,
     getTransferResponse: (state) => state.transferResponse,
     getTransferBox: (state) => state.transferBox
   },
@@ -49,10 +58,10 @@ export default new Vuex.Store({
         let password = this.getters.getPassword;
         let users = "users";
         axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${users}/${email}/${password}`).then(response => {
-         console.log(response);
-    
          if (response.data.loggedIn) {
           commit('responseApi', response.data.message);
+          commit('setAccountNumber', response.data.accountNumber);
+          commit('setUserEmail', response.data.email);
             setTimeout(() => {
               commit('clearFieldsLogin');
               router.push('/');
@@ -102,6 +111,12 @@ export default new Vuex.Store({
       commit('updateRecipient', recipient);
     },
 
+    updateRecipientAccountNumber({ commit }, recipientAccountNumber) {
+      commit('updateRecipientAccountNumber', recipientAccountNumber);
+    },
+
+
+
     /* eslint-disable */
     createUser({commit}) {
       const axios = require('axios');
@@ -135,16 +150,16 @@ export default new Vuex.Store({
     },
     
     /* eslint-disable */
-    getAccountInfo({commit}) {
-      const axios = require('axios');
-      let account = "account";
-      axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${account}`).then(response => {
+    // getAccountInfo({commit}) {
+    //   const axios = require('axios');
+    //   let account = "account";
+    //   axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${account}`).then(response => {
   
-        commit('accountInfoFromApi', response.data)
-      }).catch(err => {
-        console.log(err)
-      })
-    },
+    //     commit('accountInfoFromApi', response.data)
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
+    // },
 
     /* eslint-disable */
     showTransferBox({commit}) {
@@ -153,17 +168,20 @@ export default new Vuex.Store({
 
     /* eslint-disable */
     sendTransferDetails({commit}) {
-      const axios = require('axios');
-      let account = "account";
-      let accountNumber = this.getters.getAccount[0].accountNumber;
+      let accountNumber = this.getters.getAccountNumber;
+      let userEmail = this.getters.getUserEmail;
       let date = this.getters.getDate;
       let amount = this.getters.getAmount;
       let recipient = this.getters.getRecipient;
-      const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/${account}/${accountNumber}/${date}/${amount}/${recipient}`, {
-      accountNumber: accountNumber,
-      date: date,
+      let recipientAccountNumber = this.getters.getRecipientAccountNumber
+      const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/accounts/${accountNumber}/transactions`, {
       amount: amount,
-      recipient: recipient
+      date: date,
+      recipientReference: recipient,
+      recipientAccountNumber: recipientAccountNumber,
+      senderReference: userEmail,
+      senderAccountNumber: accountNumber,
+      type: "send"
       });
       postPromise.then((response) => {
         console.log(response)
@@ -175,8 +193,40 @@ export default new Vuex.Store({
         console.log("this is the error",error);
       });
       return postPromise;
+    },
+
+    receiveTransferDetails({commit}) {
+      let accountNumber = this.getters.getAccountNumber;
+      let userEmail = this.getters.getUserEmail;
+      let date = this.getters.getDate;
+      let amount = this.getters.getAmount;
+      let recipient = this.getters.getRecipient;
+      let recipientAccountNumber = this.getters.getRecipientAccountNumber
+      const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/accounts/${recipientAccountNumber}/transactions`, {
+      amount: amount,
+      date: date,
+      recipientReference: recipient,
+      recipientAccountNumber: recipientAccountNumber,
+      senderReference: userEmail,
+      senderAccountNumber: accountNumber,
+      type: "receive"
+      });
+      postPromise.then((response) => {
+        console.log("MONEY RECEIVED:",response)
+          // commit('responseTransfer', response.data.message);
+          // setTimeout(() => {
+          //   commit('changeStatusTransferBox');
+          // }, 2000);
+      },(error) => {
+        console.log("this is the error",error);
+      });
+      return postPromise;
     }
   },
+
+
+
+
 
   mutations: {
     updateEmail(state, email) {
@@ -188,6 +238,10 @@ export default new Vuex.Store({
     },
 
     responseApi: (state, message) => state.response = message,
+
+    setAccountNumber: (state, accountNumber) => state.accountNumber = accountNumber,
+
+    setUserEmail: (state, email) => state.userEmail = email,
 
     clearFieldsLogin(state) {
       state.email = "";
@@ -222,6 +276,10 @@ export default new Vuex.Store({
 
     updateRecipient(state, recipient) {
       state.recipient = recipient
+    },
+
+    updateRecipientAccountNumber(state, recipientAccountNumber) {
+      state.recipientAccountNumber = recipientAccountNumber
     },
 
     showTransferBox: (state) => state.transferBox = true,

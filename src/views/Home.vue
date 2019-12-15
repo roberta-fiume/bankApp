@@ -1,12 +1,6 @@
 <template>
     <div>
-        <div v-for="account in getAccount" :key="account.accountNumber">
-             <h2>Welcome, {{account.accountNumber}}</h2>
-            <div class="balance"> 
-                <h2>BALANCE:</h2>
-                <h2>{{account.total}}</h2>
-            </div>
-        </div>
+        <h1>Welcome {{getUserEmail}}</h1>
        
        <div class="transaction-wrapper">
             <p>10th Dec 2019</p>
@@ -18,8 +12,8 @@
             <button>Deposit</button>
         </div>
         <div v-if="getTransferBox">
-            <div v-for="account in getAccount" :key="account.total" class="transferDetails" >
-            <p>From: {{account.accountNumber}}</p>
+            <div class="transferDetails" >
+            <p>From: {{getAccountNumber}}</p>
 
             <div class="date">
                 <label>Enter date:</label><input type="text" placeholder="ex: 23rd Nov 2018" v-model="date">
@@ -35,8 +29,13 @@
                <label>Enter recipient:</label><input type="text" v-model="recipient">
                   <p>{{recipient}}</p>
             </div>
-          
-           <button class="sendTransference" @click="sendTransferDetails">SEND</button>
+
+            <div class="recipientAccountNumber">
+               <label>Enter recipient account number:</label><input type="text" v-model="recipientAccountNumber">
+                  <p>{{recipientAccountNumber}}</p>
+            </div>
+  
+           <button class="sendTransference" @click="sendTransferDetails(); receiveTransferDetails();">SEND</button>
            <p>{{getTransferResponse}}</p>
         </div>
         </div>
@@ -90,18 +89,29 @@ export default {
             },
         },
 
+        
+        recipientAccountNumber: {
+            get() {
+                return this.getRecipientAccountNumber
+            },
+
+            set(value) {
+                return this.updateRecipientAccountNumber(value);
+            },
+        },
+
 
         
-        ...mapGetters(['getAccount', 'getDate', 'getAmount', 'getRecipient', 'getTransferBox','getTransferResponse'])
+        ...mapGetters(['getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getAccountNumber'])
       
     },
 
     created() {
-        this.getAccountInfo();
+
     },
 
     methods: {
-        ...mapActions(['getAccountInfo', 'updateDate', 'updateAmount', 'updateRecipient', 'showTransferBox', 'sendTransferDetails']),
+        ...mapActions(['updateDate', 'updateAmount', 'updateRecipient', 'updateRecipientAccountNumber', 'showTransferBox', 'sendTransferDetails', 'receiveTransferDetails']),
 
         // showDetailsForTransfer() {
         //     this.transferDetails = true
