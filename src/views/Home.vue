@@ -35,8 +35,10 @@
                   <p>{{recipientAccountNumber}}</p>
             </div>
   
-           <button class="sendTransference" @click="sendTransferDetails(); receiveTransferDetails();">SEND</button>
+           <!-- <button class="sendTransference" @click="sendTransferDetails(); receiveTransferDetails();">SEND</button> -->
+           <button class="sendTransference" @click="sendTransaction">SEND</button>
            <p>{{getTransferResponse}}</p>
+           <p>{{getRecipientResponse}}</p>
         </div>
         </div>
      
@@ -102,7 +104,7 @@ export default {
 
 
         
-        ...mapGetters(['getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getAccountNumber'])
+        ...mapGetters(['getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber'])
       
     },
 
@@ -111,7 +113,8 @@ export default {
     },
 
     methods: {
-        ...mapActions(['updateDate', 'updateAmount', 'updateRecipient', 'updateRecipientAccountNumber', 'showTransferBox', 'sendTransferDetails', 'receiveTransferDetails']),
+        // ...mapActions(['updateDate', 'updateAmount', 'updateRecipient', 'updateRecipientAccountNumber', 'showTransferBox', 'sendTransferDetails', 'receiveTransferDetails']),
+        ...mapActions(['updateDate', 'updateAmount', 'updateRecipient', 'updateRecipientAccountNumber', 'showTransferBox', 'sendTransaction']),
 
         // showDetailsForTransfer() {
         //     this.transferDetails = true

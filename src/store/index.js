@@ -25,6 +25,7 @@ export default new Vuex.Store({
     amount: "",
     recipient: "",
     transferResponse: "",
+    recipientResponse: "",
     transferBox: false
    
   },
@@ -48,6 +49,7 @@ export default new Vuex.Store({
     getRecipient: (state) => state.recipient,
     getRecipientAccountNumber: (state) => state.recipientAccountNumber,
     getTransferResponse: (state) => state.transferResponse,
+    getRecipientResponse: (state) => state.recipientResponse,
     getTransferBox: (state) => state.transferBox
   },
 
@@ -167,60 +169,50 @@ export default new Vuex.Store({
     },
 
     /* eslint-disable */
-    sendTransferDetails({commit}) {
+     sendTransaction({commit}) {   
       let accountNumber = this.getters.getAccountNumber;
+      let recipientAccountNumber = this.getters.getRecipientAccountNumber;
       let userEmail = this.getters.getUserEmail;
       let date = this.getters.getDate;
       let amount = this.getters.getAmount;
       let recipient = this.getters.getRecipient;
-      let recipientAccountNumber = this.getters.getRecipientAccountNumber
-      const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/accounts/${accountNumber}/transactions`, {
-      amount: amount,
-      date: date,
-      recipientReference: recipient,
-      recipientAccountNumber: recipientAccountNumber,
-      senderReference: userEmail,
-      senderAccountNumber: accountNumber,
-      type: "send"
-      });
-      postPromise.then((response) => {
-        console.log(response)
-          commit('responseTransfer', response.data.message);
-          setTimeout(() => {
-            commit('changeStatusTransferBox');
-          }, 2000);
-      },(error) => {
-        console.log("this is the error",error);
-      });
-      return postPromise;
-    },
 
-    receiveTransferDetails({commit}) {
-      let accountNumber = this.getters.getAccountNumber;
-      let userEmail = this.getters.getUserEmail;
-      let date = this.getters.getDate;
-      let amount = this.getters.getAmount;
-      let recipient = this.getters.getRecipient;
-      let recipientAccountNumber = this.getters.getRecipientAccountNumber
-      const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/accounts/${recipientAccountNumber}/transactions`, {
-      amount: amount,
-      date: date,
-      recipientReference: recipient,
-      recipientAccountNumber: recipientAccountNumber,
-      senderReference: userEmail,
-      senderAccountNumber: accountNumber,
-      type: "receive"
+      let one = `https://bank-api-dot-apicreation-260015.appspot.com/accounts/${accountNumber}/transactions`;
+      let two = `https://bank-api-dot-apicreation-260015.appspot.com/accounts/${recipientAccountNumber}/transactions`;
+
+      const requestOne = axios.post(one, {
+        amount: amount,
+        date: date,
+        recipientReference: recipient,
+        recipientAccountNumber: recipientAccountNumber,
+        senderReference: userEmail,
+        senderAccountNumber: accountNumber,
+        type: "send"
       });
-      postPromise.then((response) => {
-        console.log("MONEY RECEIVED:",response)
-          // commit('responseTransfer', response.data.message);
-          // setTimeout(() => {
-          //   commit('changeStatusTransferBox');
-          // }, 2000);
-      },(error) => {
-        console.log("this is the error",error);
+
+      const requestTwo = axios.post(two, {
+        amount: amount,
+        date: date,
+        recipientReference: recipient,
+        recipientAccountNumber: recipientAccountNumber,
+        senderReference: userEmail,
+        senderAccountNumber: accountNumber,
+        type: "receive"
       });
-      return postPromise;
+
+      axios.all([requestOne, requestTwo]).then(axios.spread((...responses) => {
+        const responseOne = responses[0]
+        console.log("THIS IS RESPONSE ONE", responseOne.data.message)
+
+        commit('responseTransfer', responseOne.data.message);
+   
+        const responseTwo = responses[1];
+        console.log("THIS IS RESPONSE TWO", responseTwo)
+
+        commit('setResponseRecipient');
+      })).catch(errors => {
+        console.log("ERROR OCCURRED",errors)
+      })
     }
   },
 
@@ -285,6 +277,8 @@ export default new Vuex.Store({
     showTransferBox: (state) => state.transferBox = true,
 
     responseTransfer: (state, message) => state.transferResponse = message,
+
+    setResponseRecipient: (state) => state.recipientResponse = "MONEY HAS BEEN RECEIVED",
 
     changeStatusTransferBox: (state) => state.transferBox = false
   },
