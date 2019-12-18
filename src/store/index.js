@@ -7,11 +7,17 @@ const axios = require('axios');
 
 export default new Vuex.Store({
   state: {
+    welcomeMessage: true,
+    loginButton: true,
+    logOutButton: false,
+    wrapper: false,
+
     email: "",
     password: "",
     response: "",
     paragraphWithResponse: false,
     accountNumber:"",
+    balance: "",
     recipientAccountNumber: '',
 
     emailRegistration: "",
@@ -20,7 +26,6 @@ export default new Vuex.Store({
 
     userEmail: "",
 
-    // accountNumber: [],
     date: "",
     amount: "",
     recipient: "",
@@ -31,11 +36,16 @@ export default new Vuex.Store({
   },
 
   getters: {
+    getWelcomeMessage: (state) => state.welcomeMessage,
+    getLoginButton: (state) => state.loginButton,
+    getLogOutButton: (state) => state.logOutButton,
+    getWrapper: (state) => state.wrapper,
     getEmail: (state) => state.email,
     getPassword: (state) => state.password,
     responseFromApi: (state) => state.response,
     getParagraph: (state) => state.paragraphWithResponse,
     getAccountNumber: (state) => state.accountNumber,
+    getBalance: (state) => state.balance,
     getUserEmail: (state) => state.userEmail,
     
   
@@ -67,7 +77,12 @@ export default new Vuex.Store({
             setTimeout(() => {
               commit('clearFieldsLogin');
               router.push('/');
-              commit('responseApi')
+              // dispatch('updateWrapperStatus');
+              commit('setWrapperStatus');
+              commit('setLoginButtonStatus');
+              commit('setLogOutButtonStatus');
+              commit('setWelcomeMessageStatus');
+              commit('responseApi');
             }, 3000);
          } else {
           commit('responseApi',response.data.message);
@@ -80,7 +95,7 @@ export default new Vuex.Store({
           console.log(error.response.data.message)
       })
     },
-
+    
     updatePassword({ commit }, password) {
       commit('updatePassword', password);
     },
@@ -117,23 +132,25 @@ export default new Vuex.Store({
       commit('updateRecipientAccountNumber', recipientAccountNumber);
     },
 
-
-
     /* eslint-disable */
     createUser({commit}) {
       const axios = require('axios');
       let users = "users";
       let account = "accounts";
       let accountNumber;
+      let balance;
 
       const createBankAccount = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/${account}`);
       createBankAccount.then((response => {
         accountNumber = response.data.number;
+        balance = response.data.balance;
         console.log("ACCOUNT NUMBER",accountNumber);
+        console.log("BALANCE", balance)
         const postPromise = axios.post(`https://bank-api-dot-apicreation-260015.appspot.com/${users}`, {
           email: this.getters.getEmailRegistration,
           password: this.getters.getPasswordRegistration,
-          accountNumber: accountNumber
+          accountNumber: accountNumber,
+          balance: balance
         });
         postPromise.then((response) => {
           console.log(response)
@@ -150,18 +167,6 @@ export default new Vuex.Store({
         return postPromise;
       }))
     },
-    
-    /* eslint-disable */
-    // getAccountInfo({commit}) {
-    //   const axios = require('axios');
-    //   let account = "account";
-    //   axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${account}`).then(response => {
-  
-    //     commit('accountInfoFromApi', response.data)
-    //   }).catch(err => {
-    //     console.log(err)
-    //   })
-    // },
 
     /* eslint-disable */
     showTransferBox({commit}) {
@@ -169,7 +174,15 @@ export default new Vuex.Store({
     },
 
     /* eslint-disable */
-     sendTransaction({commit}) {   
+    logOut({commit}) {
+      commit('setLoginButtonStatusToTrue');
+      commit('setWrapperStatusToFalse');
+      commit('setWelcomeMessageToTrue');
+      commit('setLogOutButtonStatusToFalse');
+    },
+
+    /* eslint-disable */
+    sendTransaction({commit}) {   
       let accountNumber = this.getters.getAccountNumber;
       let recipientAccountNumber = this.getters.getRecipientAccountNumber;
       let userEmail = this.getters.getUserEmail;
@@ -213,14 +226,30 @@ export default new Vuex.Store({
       })).catch(errors => {
         console.log("ERROR OCCURRED",errors)
       })
-    }
+    },
+
+    
   },
 
 
-
-
-
   mutations: {
+
+   setWelcomeMessageStatus: (state) => state.welcomeMessage = false,
+
+   setWrapperStatus: (state) => state.wrapper = true,
+
+   setLoginButtonStatus: (state) => state.loginButton = false,
+
+   setLogOutButtonStatus: (state) => state.logOutButton = true,
+
+   setLoginButtonStatusToTrue: (state) => state.loginButton = true,
+
+   setLogOutButtonStatusToFalse: (state) => state.logOutButton = false,
+
+   setWrapperStatusToFalse: (state) => state.wrapper = false,
+
+   setWelcomeMessageToTrue: (state) => state.welcomeMessage = true,
+
     updateEmail(state, email) {
       state.email = email
     },

@@ -2,7 +2,7 @@
   <div id="app">
    <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/login">Login</router-link> |
+      <router-link to="/login" v-if="getLoginButton">Login</router-link> |
       <router-link to="/register">Register</router-link>
     </div>
     <router-view/>
@@ -10,11 +10,18 @@
 </template>
 
 <script>
-
+/* eslint-disable */
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
     components: {
     
     },
+
+    computed: {
+         ...mapGetters(['getLoginButton', 'getLogOutButton'])
+    }
+
+   
 }
 </script>
 
