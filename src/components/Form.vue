@@ -5,7 +5,7 @@
         <p>{{email}}</p>
         <input type="text" v-model="password" placeholder="Enter your password">
         <p>{{password}}</p>
-        <button @click="getData">Login</button>
+        <button @click="logIn">Login</button>
         <p>{{ responseFromApi }}</p>
         <!-- <button  v-if="getParagraph" @click="clearFieldsLogin">CLEAR</button> -->
     </div>
@@ -45,7 +45,7 @@ export default {
     },
 
     methods: {
-         ...mapActions(['getData', 'updatePassword', 'updateEmail']),
+         ...mapActions(['logIn', 'updatePassword', 'updateEmail']),
     }
 }
 </script>

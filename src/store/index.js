@@ -25,14 +25,12 @@ export default new Vuex.Store({
     responseRegistraton: "",
 
     userEmail: "",
-
     date: "",
     amount: "",
     recipient: "",
     transferResponse: "",
     recipientResponse: "",
     transferBox: false
-   
   },
 
   getters: {
@@ -64,7 +62,7 @@ export default new Vuex.Store({
   },
 
   actions: {
-    getData({commit}) {
+    logIn({commit}) {
       const axios = require('axios');
         let email = this.state.email;
         let password = this.getters.getPassword;
@@ -73,17 +71,17 @@ export default new Vuex.Store({
          if (response.data.loggedIn) {
           commit('responseApi', response.data.message);
           commit('setAccountNumber', response.data.accountNumber);
+          commit('setUserBalance', response.data.balance);
           commit('setUserEmail', response.data.email);
             setTimeout(() => {
               commit('clearFieldsLogin');
               router.push('/');
-              // dispatch('updateWrapperStatus');
               commit('setWrapperStatus');
               commit('setLoginButtonStatus');
               commit('setLogOutButtonStatus');
               commit('setWelcomeMessageStatus');
               commit('responseApi');
-            }, 3000);
+            }, 2000);
          } else {
           commit('responseApi',response.data.message);
           setTimeout(() => {
@@ -153,7 +151,7 @@ export default new Vuex.Store({
           balance: balance
         });
         postPromise.then((response) => {
-          console.log(response)
+          console.log("THIS IS THE RESPONSE REGISTRATION",response)
             commit('postResponse', response.data.message);
             setTimeout(() => {
               router.push('/login');
@@ -215,19 +213,19 @@ export default new Vuex.Store({
 
       axios.all([requestOne, requestTwo]).then(axios.spread((...responses) => {
         const responseOne = responses[0]
-        console.log("THIS IS RESPONSE ONE", responseOne.data.message)
-
         commit('responseTransfer', responseOne.data.message);
-   
         const responseTwo = responses[1];
-        console.log("THIS IS RESPONSE TWO", responseTwo)
-
         commit('setResponseRecipient');
+        setTimeout(() => {
+          commit('hideTransferBox');
+          commit('clearFieldsTransfer');
+        }, 1500);
       })).catch(errors => {
         console.log("ERROR OCCURRED",errors)
       })
     },
 
+    /* eslint-disable */
     
   },
 
@@ -263,6 +261,8 @@ export default new Vuex.Store({
     setAccountNumber: (state, accountNumber) => state.accountNumber = accountNumber,
 
     setUserEmail: (state, email) => state.userEmail = email,
+
+    setUserBalance: (state, balance) => state.balance = balance,
 
     clearFieldsLogin(state) {
       state.email = "";
@@ -305,13 +305,22 @@ export default new Vuex.Store({
 
     showTransferBox: (state) => state.transferBox = true,
 
+    hideTransferBox: (state) => state.transferBox = false,
+
+    clearFieldsTransfer(state) {
+      state.date = "";
+      state.amount = "";
+      state.recipient = "";
+      state.recipientAccountNumber = "";
+      state.transferResponse = "";
+      state.recipientResponse = "";
+    },
+
     responseTransfer: (state, message) => state.transferResponse = message,
 
     setResponseRecipient: (state) => state.recipientResponse = "MONEY HAS BEEN RECEIVED",
 
     changeStatusTransferBox: (state) => state.transferBox = false
-  },
-
-  modules: {
   }
+  
 })

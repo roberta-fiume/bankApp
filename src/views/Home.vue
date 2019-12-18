@@ -1,11 +1,10 @@
 <template>
     <div>
-        <div v-if="getWelcomeMessage"><h2>Welome to SaveUp! Please log in or register to access our services</h2></div>
-
+        <div v-if="getWelcomeMessage">
+            <h2>Welome to SaveUp! Please log in or register to access our services</h2>
+        </div>
         <button v-if="getLogOutButton" @click="logOut">Log out</button>
-       
         <div class="wrapper" v-if="getWrapper">
-            
             <h1>Welcome {{getUserEmail}}</h1>
             <h2>Your current balance is: {{getBalance}} </h2>
             <div class="transaction-wrapper">
@@ -16,43 +15,35 @@
             <div class="buttons">
                 <button @click="showTransferBox">Make a transfer</button>
             </div>
-            <div v-if="getTransferBox">
-                <div class="transferDetails" >
-                <p>From: {{getAccountNumber}}</p>
-
-                <div class="date">
-                    <label>Enter date:</label><input type="text" placeholder="ex: 23rd Nov 2018" v-model="date">
-                    <p>{{date}}</p>
-                </div>
-            
-                <div class="amount">
-                    <label>Enter amount: </label><input type="text" v-model="amount">
+            <div v-if="getTransferBox" class="transferDetails" >
+                <div >
+                    <p>From: {{getAccountNumber}}</p>
+                    <div class="date">
+                        <label>Enter date:</label><input type="text" placeholder="ex: 23rd Nov 2018" v-model="date">
+                        <p>{{date}}</p>
+                    </div>
+                
+                    <div class="amount">
+                        <label>Enter amount: </label><input type="text" v-model="amount">
                         <p>{{amount}}</p>
-                </div>
+                    </div>
 
-                <div class="recipient">
-                    <label>Enter recipient:</label><input type="text" v-model="recipient">
+                    <div class="recipient">
+                        <label>Enter recipient:</label><input type="text" v-model="recipient">
                         <p>{{recipient}}</p>
-                </div>
+                    </div>
 
-                <div class="recipientAccountNumber">
-                    <label>Enter recipient account number:</label><input type="text" v-model="recipientAccountNumber">
-                    <p>{{recipientAccountNumber}}</p>
-                </div>
+                    <div class="recipientAccountNumber">
+                        <label>Enter recipient account number:</label><input type="text" v-model="recipientAccountNumber">
+                        <p>{{recipientAccountNumber}}</p>
+                    </div>
 
-                <!-- <button class="sendTransference" @click="sendTransferDetails(); receiveTransferDetails();">SEND</button> -->
-                <button class="sendTransference" @click="sendTransaction">SEND</button>
-                <p>{{getTransferResponse}}</p>
-                <p>{{getRecipientResponse}}</p>
+                    <button class="sendTransference" @click="sendTransaction">SEND</button>
+                    <p>{{getTransferResponse}}</p>
+                    <p>{{getRecipientResponse}}</p>
+                </div>
             </div>
-
         </div>
-
-       
-     
-        </div>
-     
-    
     </div>
 </template>
 
@@ -112,20 +103,12 @@ export default {
             },
         },
 
-
-        
         ...mapGetters(['getWelcomeMessage','getLoginButton', 'getLogOutButton', 'getWrapper','getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber', 'getBalance'])
       
     },
 
-    created() {
-
-    },
-
     methods: {
-        // ...mapActions(['updateDate', 'updateAmount', 'updateRecipient', 'updateRecipientAccountNumber', 'showTransferBox', 'sendTransferDetails', 'receiveTransferDetails']),
         ...mapActions(['updateDate', 'updateAmount', 'updateRecipient', 'updateRecipientAccountNumber', 'showTransferBox', 'sendTransaction', 'logOut']),
-
     }
 }
 </script>
@@ -155,6 +138,7 @@ export default {
      flex-direction: column;
      justify-content: center;
      align-items: center;
+     border: 2px solid lightslategray
 }
 .date {
     display: flex;
