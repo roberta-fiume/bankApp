@@ -7,7 +7,6 @@
         <p>{{password}}</p>
         <button @click="logIn">Login</button>
         <p>{{ responseFromApi }}</p>
-        <!-- <button  v-if="getParagraph" @click="clearFieldsLogin">CLEAR</button> -->
     </div>
 </template>
 

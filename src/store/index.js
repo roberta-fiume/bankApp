@@ -7,11 +7,7 @@ const axios = require('axios');
 
 export default new Vuex.Store({
   state: {
-    welcomeMessage: true,
-    loginButton: true,
-    logOutButton: false,
-    wrapper: false,
-
+    isUserLoggedIn: false,
     email: "",
     password: "",
     response: "",
@@ -34,10 +30,7 @@ export default new Vuex.Store({
   },
 
   getters: {
-    getWelcomeMessage: (state) => state.welcomeMessage,
-    getLoginButton: (state) => state.loginButton,
-    getLogOutButton: (state) => state.logOutButton,
-    getWrapper: (state) => state.wrapper,
+    getIsUserLoggedIn: (state) => state.isUserLoggedIn,
     getEmail: (state) => state.email,
     getPassword: (state) => state.password,
     responseFromApi: (state) => state.response,
@@ -62,8 +55,7 @@ export default new Vuex.Store({
   },
 
   actions: {
-    logIn({commit}) {
-      const axios = require('axios');
+    logIn({commit, dispatch}) {
         let email = this.state.email;
         let password = this.getters.getPassword;
         let users = "users";
@@ -76,11 +68,9 @@ export default new Vuex.Store({
             setTimeout(() => {
               commit('clearFieldsLogin');
               router.push('/');
-              commit('setWrapperStatus');
-              commit('setLoginButtonStatus');
-              commit('setLogOutButtonStatus');
-              commit('setWelcomeMessageStatus');
+              commit('setIsUserLoggedInToTrue');
               commit('responseApi');
+              dispatch('getTransactions');
             }, 2000);
          } else {
           commit('responseApi',response.data.message);
@@ -132,7 +122,6 @@ export default new Vuex.Store({
 
     /* eslint-disable */
     createUser({commit}) {
-      const axios = require('axios');
       let users = "users";
       let account = "accounts";
       let accountNumber;
@@ -173,10 +162,7 @@ export default new Vuex.Store({
 
     /* eslint-disable */
     logOut({commit}) {
-      commit('setLoginButtonStatusToTrue');
-      commit('setWrapperStatusToFalse');
-      commit('setWelcomeMessageToTrue');
-      commit('setLogOutButtonStatusToFalse');
+      commit('setIsUserLoggedInToFalse')
     },
 
     /* eslint-disable */
@@ -226,27 +212,25 @@ export default new Vuex.Store({
     },
 
     /* eslint-disable */
+    getTransactions() {
+      console.log("I GET THE TRANSACTIONS");
+      let accounts = 'accounts'
+      let accountNumber = this.getters.getAccountNumber;
+      let transactions = "transactions";
+      axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${accounts}/${accountNumber}/${transactions}`).then(response => {
+        console.log("ARRAY RESPONSE",response);
+        console.log("FIRST TRANSACTION",response.data[0])
+      })
+    }
     
   },
 
 
   mutations: {
 
-   setWelcomeMessageStatus: (state) => state.welcomeMessage = false,
+    setIsUserLoggedInToTrue: (state) => state.isUserLoggedIn = true,
 
-   setWrapperStatus: (state) => state.wrapper = true,
-
-   setLoginButtonStatus: (state) => state.loginButton = false,
-
-   setLogOutButtonStatus: (state) => state.logOutButton = true,
-
-   setLoginButtonStatusToTrue: (state) => state.loginButton = true,
-
-   setLogOutButtonStatusToFalse: (state) => state.logOutButton = false,
-
-   setWrapperStatusToFalse: (state) => state.wrapper = false,
-
-   setWelcomeMessageToTrue: (state) => state.welcomeMessage = true,
+    setIsUserLoggedInToFalse: (state) => state.isUserLoggedIn = false,
 
     updateEmail(state, email) {
       state.email = email
@@ -322,5 +306,5 @@ export default new Vuex.Store({
 
     changeStatusTransferBox: (state) => state.transferBox = false
   }
-  
+
 })

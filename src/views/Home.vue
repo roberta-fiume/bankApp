@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div v-if="getWelcomeMessage">
+        <div v-if="!getIsUserLoggedIn">
             <h2>Welome to SaveUp! Please log in or register to access our services</h2>
         </div>
-        <button v-if="getLogOutButton" @click="logOut">Log out</button>
-        <div class="wrapper" v-if="getWrapper">
+        <button v-if="getIsUserLoggedIn" @click="logOut">Log out</button>
+        <div class="wrapper"  v-if="getIsUserLoggedIn">
             <h1>Welcome {{getUserEmail}}</h1>
             <h2>Your current balance is: {{getBalance}} </h2>
             <div class="transaction-wrapper">
@@ -56,7 +56,6 @@ export default {
     }, 
     data() {
         return {
-            // transferDetails: false
         }
     },
 
@@ -103,12 +102,13 @@ export default {
             },
         },
 
-        ...mapGetters(['getWelcomeMessage','getLoginButton', 'getLogOutButton', 'getWrapper','getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber', 'getBalance'])
+        // ...mapGetters(['getWelcomeMessage','getLoginButton', 'getLogOutButton', 'getWrapper','getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber', 'getBalance'])
+        ...mapGetters(['getIsUserLoggedIn','getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber', 'getBalance'])
       
     },
 
     methods: {
-        ...mapActions(['updateDate', 'updateAmount', 'updateRecipient', 'updateRecipientAccountNumber', 'showTransferBox', 'sendTransaction', 'logOut']),
+        ...mapActions(['updateDate', 'updateAmount', 'updateRecipient', 'updateRecipientAccountNumber', 'showTransferBox', 'sendTransaction', 'logOut', 'getTransactions']),
     }
 }
 </script>

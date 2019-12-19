@@ -2,7 +2,7 @@
   <div id="app">
    <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/login" v-if="getLoginButton">Login</router-link> |
+      <router-link to="/login" v-if="!getIsUserLoggedIn">Login</router-link> |
       <router-link to="/register">Register</router-link>
     </div>
     <router-view/>
@@ -18,7 +18,7 @@ export default {
     },
 
     computed: {
-         ...mapGetters(['getLoginButton', 'getLogOutButton'])
+      ...mapGetters(['getIsUserLoggedIn'])
     }
 
    
