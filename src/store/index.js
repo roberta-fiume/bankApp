@@ -26,7 +26,8 @@ export default new Vuex.Store({
     recipient: "",
     transferResponse: "",
     recipientResponse: "",
-    transferBox: false
+    transferBox: false,
+    transactions: []
   },
 
   getters: {
@@ -51,7 +52,8 @@ export default new Vuex.Store({
     getRecipientAccountNumber: (state) => state.recipientAccountNumber,
     getTransferResponse: (state) => state.transferResponse,
     getRecipientResponse: (state) => state.recipientResponse,
-    getTransferBox: (state) => state.transferBox
+    getTransferBox: (state) => state.transferBox,
+    getterTransactions: (state)  => state.transactions
   },
 
   actions: {
@@ -212,14 +214,17 @@ export default new Vuex.Store({
     },
 
     /* eslint-disable */
-    getTransactions() {
+    getTransactions({commit}) {
       console.log("I GET THE TRANSACTIONS");
       let accounts = 'accounts'
       let accountNumber = this.getters.getAccountNumber;
       let transactions = "transactions";
       axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${accounts}/${accountNumber}/${transactions}`).then(response => {
         console.log("ARRAY RESPONSE",response);
-        console.log("FIRST TRANSACTION",response.data[0])
+        console.log("FIRST TRANSACTION",response.data)
+        commit('setTransactions', response.data)
+      }).catch(errors => {
+        console.log("ERROR OCCURRED",errors)
       })
     }
     
@@ -304,7 +309,9 @@ export default new Vuex.Store({
 
     setResponseRecipient: (state) => state.recipientResponse = "MONEY HAS BEEN RECEIVED",
 
-    changeStatusTransferBox: (state) => state.transferBox = false
+    changeStatusTransferBox: (state) => state.transferBox = false,
+
+    setTransactions: (state, transactions) => state.transactions = transactions
   }
 
 })

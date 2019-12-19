@@ -7,10 +7,14 @@
         <div class="wrapper"  v-if="getIsUserLoggedIn">
             <h1>Welcome {{getUserEmail}}</h1>
             <h2>Your current balance is: {{getBalance}} </h2>
-            <div class="transaction-wrapper">
-                <p>10th Dec 2019</p>
-                <p>Julio Lopez</p>
-                <p>-50</p>
+            <div class="transaction-wrapper" v-for="transaction in getterTransactions" :key="transaction.amount" >
+                <p>AMOUNT: {{transaction.amount}}</p>
+                <p>DATE: {{transaction.date}}</p>
+                <!-- <p>{{transaction.recipientAccountNumber}}</p> -->
+                <p>TO: {{transaction.recipientReference}}</p>
+                <p> FROM: {{transaction.senderAccountNumber}}</p>
+                <p> SENDER REFERENCE: {{transaction.senderReference}}</p>
+                <p> TYPE: {{transaction.type}}</p>
             </div>
             <div class="buttons">
                 <button @click="showTransferBox">Make a transfer</button>
@@ -103,7 +107,7 @@ export default {
         },
 
         // ...mapGetters(['getWelcomeMessage','getLoginButton', 'getLogOutButton', 'getWrapper','getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber', 'getBalance'])
-        ...mapGetters(['getIsUserLoggedIn','getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber', 'getBalance'])
+        ...mapGetters(['getIsUserLoggedIn','getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber', 'getBalance', 'getterTransactions'])
       
     },
 
