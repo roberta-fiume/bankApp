@@ -6,9 +6,9 @@
         <button v-if="getIsUserLoggedIn" @click="logOut">Log out</button>
         <div class="wrapper"  v-if="getIsUserLoggedIn">
             <h1>Welcome {{getUserEmail}}</h1>
-            <h2>Your current balance is: {{getBalance}} </h2>
+            <h2>Your current balance is: {{getBalanceAfterReceivedTransactions}} </h2>
             <div class="transaction-wrapper" v-for="transaction in getterTransactions" :key="transaction.amount" >
-                <p>AMOUNT: {{transaction.amount}}</p>
+                <p> AMOUNT: {{transaction.type === "send" ?  -Math.abs(transaction.amount) : "+" + transaction.amount}}</p>
                 <p>DATE: {{transaction.date}}</p>
                 <!-- <p>{{transaction.recipientAccountNumber}}</p> -->
                 <p>TO: {{transaction.recipientReference}}</p>
@@ -107,7 +107,7 @@ export default {
         },
 
         // ...mapGetters(['getWelcomeMessage','getLoginButton', 'getLogOutButton', 'getWrapper','getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber', 'getBalance'])
-        ...mapGetters(['getIsUserLoggedIn','getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber', 'getBalance', 'getterTransactions'])
+        ...mapGetters(['getIsUserLoggedIn','getDate', 'getUserEmail','getAmount', 'getRecipient', 'getRecipientAccountNumber','getTransferBox','getTransferResponse','getRecipientResponse', 'getAccountNumber', 'getBalance', 'getterTransactions', 'getBalanceAfterReceivedTransactions'])
       
     },
 

@@ -27,7 +27,8 @@ export default new Vuex.Store({
     transferResponse: "",
     recipientResponse: "",
     transferBox: false,
-    transactions: []
+    transactions: [],
+    balanceAfterReceivedTransactions: ""
   },
 
   getters: {
@@ -53,7 +54,8 @@ export default new Vuex.Store({
     getTransferResponse: (state) => state.transferResponse,
     getRecipientResponse: (state) => state.recipientResponse,
     getTransferBox: (state) => state.transferBox,
-    getterTransactions: (state)  => state.transactions
+    getterTransactions: (state)  => state.transactions,
+    getBalanceAfterReceivedTransactions: (state) => state.balanceAfterReceivedTransactions
   },
 
   actions: {
@@ -174,6 +176,7 @@ export default new Vuex.Store({
       let userEmail = this.getters.getUserEmail;
       let date = this.getters.getDate;
       let amount = this.getters.getAmount;
+      console.log("THIS IS THE AMOUNT", amount);
       let recipient = this.getters.getRecipient;
 
       let one = `https://bank-api-dot-apicreation-260015.appspot.com/accounts/${accountNumber}/transactions`;
@@ -214,20 +217,46 @@ export default new Vuex.Store({
     },
 
     /* eslint-disable */
-    getTransactions({commit}) {
+    getTransactions({commit, dispatch}) {
       console.log("I GET THE TRANSACTIONS");
-      let accounts = 'accounts'
+      let accounts = 'accounts';
       let accountNumber = this.getters.getAccountNumber;
       let transactions = "transactions";
       axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${accounts}/${accountNumber}/${transactions}`).then(response => {
         console.log("ARRAY RESPONSE",response);
-        console.log("FIRST TRANSACTION",response.data)
-        commit('setTransactions', response.data)
+        console.log("FIRST TRANSACTION",response.data);
+        commit('setTransactions', response.data);
+        dispatch('updateBalance')
       }).catch(errors => {
         console.log("ERROR OCCURRED",errors)
       })
+    },
+
+    /* eslint-disable */
+    updateBalance({commit}) {
+      let transactions = this.getters.getterTransactions;
+      let sentTransactions = [];
+      let receivedTransactions = [];
+      console.log("these are the damn transactions", transactions);
+        transactions.forEach(transaction => {
+        transaction.type === "send" ? sentTransactions.push(transaction.amount) : receivedTransactions.push(transaction.amount)
+      }); 
+      console.log("SENT TRANSACTIONS", sentTransactions);
+      console.log("RECEIVED TRANSACTIONS", receivedTransactions);
+      let sumSent = sentTransactions.reduce((a,b) => a + b, 0);
+      console.log("SUM OF SENT TRANSACTIONS", sumSent);
+      let sumReceived = receivedTransactions.reduce((a,b) => a + b, 0);
+      console.log("SUM OF RECEIVED TRANSACTIONS", sumReceived);
+
+      let initialBalance = this.getters.getBalance;
+      console.log("THIS IS THE INITIAL BALANCE");
+
+      let balanceAfterReceivedTransactions = initialBalance + sumReceived;
+      console.log("BALANCE AFTER RECEIVED TRANSACTIONS", balanceAfterReceivedTransactions)
+
+      // Devo sottrarre il balance delle transactions ricevute a quelle mandate per ottenere il totale. Il commit e' di prova per vedere se funziona tutto
+      commit('setBalanceAfterReceivedTransactions', balanceAfterReceivedTransactions);
     }
-    
   },
 
 
@@ -311,7 +340,9 @@ export default new Vuex.Store({
 
     changeStatusTransferBox: (state) => state.transferBox = false,
 
-    setTransactions: (state, transactions) => state.transactions = transactions
+    setTransactions: (state, transactions) => state.transactions = transactions,
+
+    setBalanceAfterReceivedTransactions: (state, balanceAfterReceivedTransactions) => state.balanceAfterReceivedTransactions = balanceAfterReceivedTransactions
   }
 
 })
