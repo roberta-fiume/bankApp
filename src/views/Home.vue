@@ -6,9 +6,9 @@
         <button v-if="getIsUserLoggedIn" @click="logOut">Log out</button>
         <div class="wrapper"  v-if="getIsUserLoggedIn">
             <h1>Welcome {{getUserEmail}}</h1>
-            <h2>Your current balance is: {{getFlagForTotal === true ? getTotal : getUpdatedTotalAfterSendingTransaction}} </h2>
+            <h2>Your current balance is: £{{getFlagForTotal === true ? getTotal : getUpdatedTotalAfterSendingTransaction}} </h2>
             <div class="transaction-wrapper" v-for="transaction in getterTransactions" :key="transaction.amount" >
-                <p> AMOUNT: {{transaction.type === "send" ?  -Math.abs(transaction.amount) : "+" + transaction.amount}}</p>
+                <p> AMOUNT: {{transaction.type === "send" ? "£"+ -transaction.amount : "+" + "£"+transaction.amount}}</p>
                 <p>DATE: {{transaction.date}}</p>
                 <!-- <p>{{transaction.recipientAccountNumber}}</p> -->
                 <p>TO: {{transaction.recipientReference}}</p>
@@ -28,7 +28,7 @@
                     </div>
                 
                     <div class="amount">
-                        <label>Enter amount: </label><input type="text" v-model="amount">
+                        <label>Enter amount: £</label><input type="text" v-model="amount">
                         <p>{{amount}}</p>
                     </div>
 
