@@ -28,7 +28,9 @@ export default new Vuex.Store({
     recipientResponse: "",
     transferBox: false,
     transactions: [],
-    balanceAfterReceivedTransactions: ""
+    flagForTotal: true,
+    total: "",
+    updatedTotalAfterSendingTransaction: ""
   },
 
   getters: {
@@ -55,7 +57,9 @@ export default new Vuex.Store({
     getRecipientResponse: (state) => state.recipientResponse,
     getTransferBox: (state) => state.transferBox,
     getterTransactions: (state)  => state.transactions,
-    getBalanceAfterReceivedTransactions: (state) => state.balanceAfterReceivedTransactions
+    getFlagForTotal: (state) => state.flagForTotal,
+    getTotal: (state) => state.total,
+    getUpdatedTotalAfterSendingTransaction: (state) => state.updatedTotalAfterSendingTransaction
   },
 
   actions: {
@@ -65,6 +69,7 @@ export default new Vuex.Store({
         let users = "users";
         axios.get(`https://bank-api-dot-apicreation-260015.appspot.com/${users}/${email}/${password}`).then(response => {
          if (response.data.loggedIn) {
+          commit('setFlagForTotalToTrue');
           commit('responseApi', response.data.message);
           commit('setAccountNumber', response.data.accountNumber);
           commit('setUserBalance', response.data.balance);
@@ -170,7 +175,7 @@ export default new Vuex.Store({
     },
 
     /* eslint-disable */
-    sendTransaction({commit}) {   
+    sendTransaction({commit, dispatch}) {   
       let accountNumber = this.getters.getAccountNumber;
       let recipientAccountNumber = this.getters.getRecipientAccountNumber;
       let userEmail = this.getters.getUserEmail;
@@ -209,6 +214,8 @@ export default new Vuex.Store({
         commit('setResponseRecipient');
         setTimeout(() => {
           commit('hideTransferBox');
+          commit('setFlagForTotalToFalse')
+         dispatch('updateTotalAfterTransaction')
           commit('clearFieldsTransfer');
         }, 1500);
       })).catch(errors => {
@@ -234,6 +241,7 @@ export default new Vuex.Store({
 
     /* eslint-disable */
     updateBalance({commit}) {
+      // this.getters.getFlagForTotal = true;
       let transactions = this.getters.getterTransactions;
       let sentTransactions = [];
       let receivedTransactions = [];
@@ -252,13 +260,30 @@ export default new Vuex.Store({
       console.log("THIS IS THE INITIAL BALANCE");
 
       let balanceAfterReceivedTransactions = initialBalance + sumReceived;
-      console.log("BALANCE AFTER RECEIVED TRANSACTIONS", balanceAfterReceivedTransactions)
+      console.log("BALANCE AFTER RECEIVED TRANSACTIONS", balanceAfterReceivedTransactions);
+
+      let total = balanceAfterReceivedTransactions - sumSent;
+
+      console.log("THIS IS THE TOTAL", total)
 
       // Devo sottrarre il balance delle transactions ricevute a quelle mandate per ottenere il totale. Il commit e' di prova per vedere se funziona tutto
-      commit('setBalanceAfterReceivedTransactions', balanceAfterReceivedTransactions);
+      commit('setTotal', total);
+    },
+
+      /* eslint-disable */
+    updateTotalAfterTransaction({commit}) {
+      console.log("I WORK IN UPDATED TOTAL AFTER TRANSACTION");
+      commit('setFlagForTotalToFalse');
+      let amount = this.getters.getAmount;
+      let total = this.getters.getTotal;
+
+      let updatedBalanceAfterSendingTransaction = total - amount;
+
+      console.log("UPDATED TOTAL AFTER SENDING TRANSACTION", updatedBalanceAfterSendingTransaction);
+
+      commit('setUpdatedBalanceAfterSendingTransaction', updatedBalanceAfterSendingTransaction);
     }
   },
-
 
   mutations: {
 
@@ -342,7 +367,13 @@ export default new Vuex.Store({
 
     setTransactions: (state, transactions) => state.transactions = transactions,
 
-    setBalanceAfterReceivedTransactions: (state, balanceAfterReceivedTransactions) => state.balanceAfterReceivedTransactions = balanceAfterReceivedTransactions
+    setFlagForTotalToTrue: (state) => state.flagForTotal = true,
+
+    setFlagForTotalToFalse: (state) => state.flagForTotal = false,
+
+    setTotal: (state, total) => state.total = total,
+
+    setUpdatedBalanceAfterSendingTransaction: (state, updatedTotalAfterSendingTransaction) => state.updatedTotalAfterSendingTransaction = updatedTotalAfterSendingTransaction
   }
 
 })
