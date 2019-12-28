@@ -21,3 +21,12 @@ export default {
   }
 }
 </script>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Solway&display=swap');
+
+body {
+  font-family: 'Solway', serif;
+}
+
+</style>

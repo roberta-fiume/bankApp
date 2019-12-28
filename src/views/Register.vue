@@ -1,11 +1,11 @@
 <template>
   <div class="register">
     <h1>Register</h1>
-   <input type="text" v-model="emailRegistration" placeholder="Enter an email">
+   <input type="text" v-model="emailRegistration" placeholder="Enter an email" class="inputText">
    <p>{{emailRegistration}}</p>
-   <input type="text" v-model="passwordRegistration" placeholder="Enter a password">
+   <input type="text" v-model="passwordRegistration" placeholder="Enter a password" class="inputText">
     <p>{{passwordRegistration}}</p>
-   <button @click="createUser()">Sign up</button>
+   <button @click="createUser()" class="registerButton">Sign up</button>
    <p>{{responsePostRequest}}</p>
   </div>
 </template>
@@ -51,5 +51,20 @@ export default {
 </script>
 
 <style>
+    .inputText {
+        border: none;
+        border-bottom: #41b883 2px solid;
+        height: 25px;
+        outline: none;
+        
+    }
 
+    .registerButton {
+        border-radius: 3px;
+        height: 30px;
+        width: 70px;
+        box-shadow: none;
+        border: 2px solid #41b883;
+        background: white;
+    }
 </style>

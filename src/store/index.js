@@ -48,7 +48,6 @@ export default new Vuex.Store({
     getPasswordRegistration: (state) => state.passwordRegistration,
     responsePostRequest: (state) => state.responseRegistraton,
 
-    // getAccount: (state) => state.accountNumber,
     getDate: (state) => state.date,
     getAmount: (state) => state.amount,
     getRecipient: (state) => state.recipient,

@@ -3,21 +3,26 @@
         <div v-if="!getIsUserLoggedIn">
             <h2>Welome to SaveUp! Please log in or register to access our services</h2>
         </div>
-        <button v-if="getIsUserLoggedIn" @click="logOut">Log out</button>
+        <button v-if="getIsUserLoggedIn" @click="logOut" class="logOutButton">Log out</button>
         <div class="wrapper"  v-if="getIsUserLoggedIn">
             <h1>Welcome {{getUserEmail}}</h1>
-            <h2>Your current balance is: £{{getFlagForTotal === true ? getTotal : getUpdatedTotalAfterSendingTransaction}} </h2>
-            <div class="transaction-wrapper" v-for="transaction in getterTransactions" :key="transaction.amount" >
-                <p> AMOUNT: {{transaction.type === "send" ? "£"+ -transaction.amount : "+" + "£"+transaction.amount}}</p>
-                <p>DATE: {{transaction.date}}</p>
+            <div class="wrapper-balance">
+                <p>Balance afer pending</p>
+                <h2 class="balance">£{{getFlagForTotal === true ? getTotal : getUpdatedTotalAfterSendingTransaction}}</h2>  
+            </div>
+            <div class="transaction-wrapper" v-for="transaction in getterTransactions" :key="transaction.amount">
+                    <div>{{transaction.date}}</div>
+                    <div class="details-wrapper">
+                        <div class="row">{{transaction.recipientReference}}</div>
+                        <div class="row-second">{{transaction.type === "send" ? "£"+ -transaction.amount : "+" + "£"+transaction.amount}}</div>
+                    </div>
                 <!-- <p>{{transaction.recipientAccountNumber}}</p> -->
-                <p>TO: {{transaction.recipientReference}}</p>
-                <p> FROM: {{transaction.senderAccountNumber}}</p>
-                <p> SENDER REFERENCE: {{transaction.senderReference}}</p>
-                <p> TYPE: {{transaction.type}}</p>
+                <!-- <p> FROM: {{transaction.senderAccountNumber}}</p> -->
+                <!-- <p> SENDER REFERENCE: {{transaction.senderReference}}</p> -->
+                <!-- <p> TYPE: {{transaction.type}}</p> -->
             </div>
             <div class="buttons">
-                <button @click="showTransferBox">Make a transfer</button>
+                <button @click="showTransferBox" class="doTransfer">Make a transfer</button>
             </div>
             <div v-if="getTransferBox" class="transferDetails" >
                 <div >
@@ -116,6 +121,12 @@ export default {
 }
 </script>
 <style>
+h2 {
+    margin: 0;
+}
+p {
+    margin: 0;
+}
 .wrapper {
     border: 2px solid lightsalmon
 }
@@ -124,11 +135,24 @@ export default {
     flex-direction: row;
 }
 
-.transaction-wrapper {
+.wrapper-balance {
+    border-bottom: 1px solid gray;
     display: flex;
-    flex-direction: row;
-    border: 2px solid lightseagreen;
-    justify-content: space-around
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    padding-left: 15px;
+    padding-bottom: 15px;
+}
+
+.transaction-wrapper {
+    border-bottom: 1px solid gray;
+    padding-left: 15px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start
 }
 
 .import {
@@ -164,6 +188,42 @@ export default {
 .sendTransference {
     width: 70px;
 
+}
+.logOutButton {
+    border-radius: 3px;
+    height: 30px;
+    width: 70px;
+    box-shadow: none;
+    border: 2px solid #41b883;
+    background: white;
+}
+
+.doTransfer {
+    border-radius: 3px;
+    height: 30px;
+    width: 70px;
+    box-shadow: none;
+    border: 2px solid #41b883;
+    background: white;
+}
+
+.details-wrapper {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 10px;
+    align-items: flex-start
+
+}
+
+.row {
+  display: flex; 
+}
+
+.row-second {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 15px;
 }
 
 

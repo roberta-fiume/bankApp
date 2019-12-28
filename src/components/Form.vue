@@ -1,11 +1,11 @@
 <template>
     <div class="form">
         <h1>Login</h1>
-        <input type="text" v-model="email" placeholder="Enter your email">
+        <input type="text" v-model="email" placeholder="Enter your email" class="inputText">
         <p>{{email}}</p>
-        <input type="text" v-model="password" placeholder="Enter your password">
+        <input type="text" v-model="password" placeholder="Enter your password" class="inputText">
         <p>{{password}}</p>
-        <button @click="logIn">Login</button>
+        <button @click="logIn" class="loginButton ">Login</button>
         <p>{{ responseFromApi }}</p>
     </div>
 </template>
@@ -48,3 +48,24 @@ export default {
     }
 }
 </script>
+
+<style>
+
+    
+    .inputText {
+        border: none;
+        border-bottom: #41b883 2px solid;
+        height: 25px;
+        outline: none;
+    }
+
+    .loginButton {
+        border-radius: 3px;
+        height: 30px;
+        width: 70px;
+        box-shadow: none;
+        border: 2px solid #41b883;
+        background: white;
+        outline: none;
+    }
+</style>
