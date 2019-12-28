@@ -1,9 +1,11 @@
 <template>
   <div id="app">
-   <div id="nav">
-      <router-link to="/" class="router-link">Home</router-link> |
-      <router-link to="/login" v-if="!getIsUserLoggedIn" class="router-link">Login</router-link> |
-      <router-link to="/register" class="router-link">Register</router-link>
+   <div class="nav">
+      <router-link to="/" class="router-link">Home</router-link> 
+      <router-link to="/login" v-if="!getIsUserLoggedIn" class="router-link">Login</router-link> 
+      <router-link to="/register" class="router-link">Register</router-link> 
+      <p class="logout" v-if="getIsUserLoggedIn" @click="logOut">Logout</p>
+
     </div>
     <router-view/>
   </div>
@@ -19,6 +21,10 @@ export default {
 
     computed: {
       ...mapGetters(['getIsUserLoggedIn'])
+    },
+
+    methods: {
+      ...mapActions(['logOut'])
     }
 
    
@@ -30,16 +36,25 @@ export default {
 
 
 #app {
-  font-family: 'Solway', serif;
-  /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* font-family: 'Solway', serif; */
   color: #2c3e50;
+}
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  margin-right: 10px;
 }
 
 .router-link {
   text-decoration: none;
+  color: black;
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.logout {
+  font-size: 20px;
   color: black;
 }
 

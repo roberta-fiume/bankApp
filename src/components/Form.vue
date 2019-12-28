@@ -6,7 +6,7 @@
         <input type="text" v-model="password" placeholder="Enter your password" class="inputText">
         <p>{{password}}</p>
         <button @click="logIn" class="loginButton ">Login</button>
-        <p>{{ responseFromApi }}</p>
+        <p class="response">{{ responseFromApi }}</p>
     </div>
 </template>
 
@@ -50,6 +50,7 @@ export default {
 </script>
 
 <style>
+/* @import url('https://fonts.googleapis.com/css?family=Solway&display=swap'); */
 
     
     .inputText {
@@ -57,6 +58,8 @@ export default {
         border-bottom: #41b883 2px solid;
         height: 25px;
         outline: none;
+        margin-bottom: 20px;
+        font-family: 'Solway', serif;
     }
 
     .loginButton {
@@ -67,5 +70,11 @@ export default {
         border: 2px solid #41b883;
         background: white;
         outline: none;
+        margin-top: 15px;
+        font-family: 'Solway', serif;
+    }
+
+    .response {
+        margin-top: 40px;
     }
 </style>

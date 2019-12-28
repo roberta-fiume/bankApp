@@ -6,7 +6,7 @@
    <input type="text" v-model="passwordRegistration" placeholder="Enter a password" class="inputText">
     <p>{{passwordRegistration}}</p>
    <button @click="createUser()" class="registerButton">Sign up</button>
-   <p>{{responsePostRequest}}</p>
+   <p class="response">{{responsePostRequest}}</p>
   </div>
 </template>
 
@@ -56,7 +56,8 @@ export default {
         border-bottom: #41b883 2px solid;
         height: 25px;
         outline: none;
-        
+        margin-bottom: 20px;
+        font-family: 'Solway', serif;
     }
 
     .registerButton {
@@ -66,5 +67,11 @@ export default {
         box-shadow: none;
         border: 2px solid #41b883;
         background: white;
+        margin-top: 15px;
+        font-family: 'Solway', serif;
+    }
+
+    .response {
+        margin-top: 40px;
     }
 </style>
